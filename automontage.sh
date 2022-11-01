@@ -29,7 +29,7 @@ done
 shift $((OPTIND - 1))
 
 #get list of video files into invids.txt
-ls -1 ~/Videos/* > vids.txt
+#ls -1 ~/Videos/* > vids.txt
 
 #get parameters of all video files
 rm -f in_video_resolutions.txt
