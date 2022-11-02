@@ -35,7 +35,7 @@ shift $((OPTIND - 1))
 rm -f in_video_resolutions.txt
 while read video_file; do 
     echo -n $video_file "has size "
-    ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 $video_file >>in_video_resolutions.txt
+    ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "$video_file" >>in_video_resolutions.txt
     tail -1 in_video_resolutions.txt
 done <vids.txt
 
@@ -55,11 +55,11 @@ rm -f part_*.mp4
 counter=0
 cat vids.txt | while read video_file; do 
     echo -n $video_file "has duration "
-    ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 $video_file >>in_video_durations.txt
+    ffprobe -v error -select_streams v:0 -show_entries stream=duration -of csv=p=0 "$video_file" >>in_video_durations.txt
     tail -1 in_video_durations.txt
     #prepare individual segments
     counter=$((counter + 1))
-    ffmpeg -y -hide_banner -loglevel error -i $video_file -ss 0 -to $seg_length -c copy part_$counter.mp4 < /dev/null
+    ffmpeg -y -hide_banner -loglevel error -i "$video_file" -ss 0 -to $seg_length -c copy part_$counter.mp4 < /dev/null
     echo "part_$counter.mp4 created"
 done
 
