@@ -7,11 +7,13 @@ usage="$(basename "$0") [-h] [-s n] -- convert any number of video files into a 
 where:
     -h  show this help text
     -s  segment length from each video (seconds) - default 10
-    -l  file containing list of videos (one per line, absolute path) - default vids.txt"
+    -l  file containing list of videos (one per line, absolute path) - default vids.txt
+    -o  output video - default montage.mp4"
 
 seg_length=10
 list_of_videos_file=vids.txt
-while getopts ':hsl:' option; do
+montage_file=montage.mp4
+while getopts ':hslo:' option; do
   case "$option" in
     h) echo "$usage"
        exit
@@ -19,6 +21,8 @@ while getopts ':hsl:' option; do
     s) seg_length=$OPTARG
        ;;
     l) list_of_videos_file=$OPTARG
+       ;;
+    o) montage_file=$OPTARG
        ;;
     :) printf "missing argument for -%s\n" "$OPTARG" >&2
        echo "$usage" >&2
@@ -75,8 +79,8 @@ rm in_video_durations.txt
 #join segments into one file
 ls -d -1 "$PWD/"part_*.mp4 | sed "s/^/file '/g" | sed "s/$/'/g" >part_list.txt
     
-ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i part_list.txt -c copy montage.mp4
+ffmpeg -y -hide_banner -loglevel error -f concat -safe 0 -i part_list.txt -c copy $montage_file
 
-echo "montage.mp4 created"
+echo "${montage_file} created"
 
 rm -f part_*.mp4 part_list.txt
