@@ -2,7 +2,7 @@
 #automontage
 
 #read arguments
-usage="$(basename "$0") [-h] [-s n] -- convert any number of video files into a single montage
+usage="$(basename "$0") [-h] [-s n] [-l f] [-o f] -- convert any number of video files into a single montage
 
 where:
     -h  show this help text
