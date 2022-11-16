@@ -2,23 +2,27 @@
 #automontage
 
 #read arguments
-usage="$(basename "$0") [-h] [-s n] [-l f] [-o f] -- convert any number of video files into a single montage
+usage="$(basename "$0") [-h] [-s n] [-t n] [-l f] [-o f] -- convert any number of video files into a single montage
 
 where:
     -h  show this help text
     -s  segment length from each video (seconds) - default 10
+    -t  total length of montage (seconds) - overwrites -s
     -l  file containing list of videos (one per line, absolute path) - default vids.txt
     -o  output video - default montage.mp4"
 
 seg_length=10
+montage_length=0
 list_of_videos_file=vids.txt
 montage_file=montage.mp4
-while getopts ':hslo:' option; do
+while getopts ':hl:s:t:o:' option; do
   case "$option" in
     h) echo "$usage"
        exit
        ;;
     s) seg_length=$OPTARG
+       ;;
+    t) montage_length=$OPTARG
        ;;
     l) list_of_videos_file=$OPTARG
        ;;
@@ -48,6 +52,13 @@ if [[ $(sort in_video_resolutions.txt | uniq | wc -l) != "1" ]]
 then
   echo "there are input videos of multiple resolutions, exiting"
   exit
+fi
+
+if [[ $montage_length -ne 0 ]]
+then
+    num_vids=`cat in_video_resolutions.txt | wc -l`
+    let "seg_length = $montage_length / $num_vids"
+    echo "The montage will have length" $montage_length "by taking segments of length" $seg_length "from" $num_vids "videos"
 fi
 
 #not used
