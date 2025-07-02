@@ -3,7 +3,7 @@
 A clever commandline tool that converts videos into a single montage using ffmpeg.
 
 Current features:
-get a list of video files, and if they are the same resolution, create a montage with randomly chosen s seconds of each
+get a list of video files, and if they are the same resolution, create a montage with randomly chosen s seconds of each. Videos shorter than the chosen segment length are now trimmed correctly.
 
 Planned features:
 Multiple shots from each video, and transitions. Cool AI features like detecting nice shots.
