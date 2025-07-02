@@ -77,9 +77,14 @@ cat $list_of_videos_file | while read video_file; do
     #prepare individual segments
     counter=$((counter + 1))
     duration_in_seconds_round_down=`tail -1 in_video_durations.txt | sed 's/\.[0-9]*//g' | sed 's/,[0-9]*//g'`
-    let "max_length = $duration_in_seconds_round_down - $seg_length"
-    from=`shuf -i 0-$max_length -n 1`
-    let "to = $from + $seg_length"
+    if [ "$seg_length" -ge "$duration_in_seconds_round_down" ]; then
+        from=0
+        to=$duration_in_seconds_round_down
+    else
+        max_length=$(( duration_in_seconds_round_down - seg_length ))
+        from=$(shuf -i 0-$max_length -n 1)
+        to=$(( from + seg_length ))
+    fi
     echo "selecting segment from ${from}s to ${to}s in video $video_file"
     ffmpeg -y -hide_banner -loglevel error -i "$video_file" -ss $from -to $to -c copy part_$counter.mp4 < /dev/null
     echo "part_$counter.mp4 created"
